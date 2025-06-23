@@ -22,11 +22,24 @@ In a nutshell, we will be dealing with the following components:
 - Groups in Vault can be external or internal. External groups are those that are mapped to an external IdP such as Okta or AD.
   Internal groups are those that are created and managed within Vault itself. Groups can be nested, meaning that a group can
   inherit policies from its parents.
-- Group aliases are references to external groups in an IdP. They are associated with Auth methods via their accessors.
+- Group aliases are references to external groups in an IdP. They are associated with Auth methods via their accessors and can be
+  assigned to external Groups for automatic management of group membership for external groups.
 - Entities are the unique identities that are created in Vault. An entity can have multiple aliases, which are references
   to external identities such as those in an IdP. An entity can also have multiple groups associated with it, which can be used
   to assign policies to the entity.
 
+## Use Case
+
+## Namespaces
+
+[Vault Namespaces](https://developer.hashicorp.com/vault/tutorials/enterprise/namespaces) is a construct that allows
+for multi-tenancy in Vault. Each namespace is isolated from others and can have its own set of auth methods, policies,
+and secrets engines. This is useful for organizations that want to have multiple teams or departments using Vault
+without interfering with each other. Namespaces have a hierarchical structure, meaning that a namespace can have
+sub-namespaces. From the perspective of the Identity Secrets Engine, each namespace has its own set of identities, groups, and auth methods,
+but they also inherit from the parent namespace. This means that you can have a common set of auth methods and policies
+in the parent namespace and then allow the users to access child namespaces. Similiarly, you can reference
+groups and entities from the parent namespace in the child namespaces for the purposes of access control.
 
 ## TODO
 
