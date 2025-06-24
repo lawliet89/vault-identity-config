@@ -1,13 +1,14 @@
 # vault-identity-config
 
-When configuring human operator access to a Vault server, we would usually use an Identity Provider (IdP)
-such as Okta, AD, or OIDC for single sign-on (SSO) to Vault. A common use case is to use the IdP
-to manage users and groups and then map the groups that users belong to in the IdP to specific sets
-of Vault policies.
+A common use case that many Vault operators face is the need to manage human operator access to Vault
+using an Identity Provider (IdP) such as Okta, Active Directory (AD), or OpenID Connect (OIDC) for single sign-on (SSO).
+In this scenario, the IdP is used to manage users and groups, and the groups that users belong to in the IdP are mapped
+to specific sets of Vault policies. This allows for fine-grained access control and simplifies the management of user access
+to Vault.
 
 The [Identity Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/identity) in Vault
-allows you to manage identities and groups within Vault itself. It is always mounted in every
-single namespace. The [identity documentation](https://developer.hashicorp.com/vault/docs/concepts/identity)
+allows you to manage entities (users) and groups within Vault itself. It is always mounted in every
+namespace. The [identity documentation](https://developer.hashicorp.com/vault/docs/concepts/identity)
 provides a good overview of the terms used in the Identity Secrets Engine and it is necessary to understand
 the terms before diving deeper into this post. You might also find this
 [tutorial](https://developer.hashicorp.com/vault/tutorials/auth-methods/identity) useful.
@@ -28,7 +29,9 @@ In a nutshell, we will be dealing with the following components:
   to external identities such as those in an IdP. An entity can also have multiple groups associated with it, which can be used
   to assign policies to the entity.
 
-## Use Case
+## Design
+
+Consider that we have mounted a GitHub auth method at the path `github` and an OIDC auth method at the path `oidc`.
 
 ## Namespaces
 
@@ -38,10 +41,11 @@ and secrets engines. This is useful for organizations that want to have multiple
 without interfering with each other. Namespaces have a hierarchical structure, meaning that a namespace can have
 sub-namespaces. From the perspective of the Identity Secrets Engine, each namespace has its own set of identities, groups, and auth methods,
 but they also inherit from the parent namespace. This means that you can have a common set of auth methods and policies
-in the parent namespace and then allow the users to access child namespaces. Similiarly, you can reference
+in the parent namespace and then allow the users to access child namespaces. Similarly, you can reference
 groups and entities from the parent namespace in the child namespaces for the purposes of access control.
 
 ## TODO
 
 - Add a second auth method to the example
 - Mention about how entities work in namespaces
+- Merging entities -- pre-create
